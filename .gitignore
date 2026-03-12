@@ -7,10 +7,10 @@ pnpm-lock.yaml
 # Build output
 dist/
 build/
-*.js
-*.js.map
-*.d.ts
-*.d.ts.map
+dist/**/*.js
+dist/**/*.js.map
+dist/**/*.d.ts
+dist/**/*.d.ts.map
 
 # Environment variables
 .env
