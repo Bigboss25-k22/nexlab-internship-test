@@ -20,25 +20,20 @@ app.use(
   })
 );
 
-// Cookie parser
 app.use(cookieParser());
 
-// Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Routes
 app.use('/api', routes);
 
 app.get('/', (_req, res) => {
   res.json({ message: 'Nexlab API is running!' });
 });
 
-// Error handlers (must be last)
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// Khởi tạo database connection
 AppDataSource.initialize()
   .then(() => {
     console.log('Database connected successfully');

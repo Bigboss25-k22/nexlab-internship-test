@@ -13,7 +13,6 @@ export const authenticate = (req: Request, _res: Response, next: NextFunction): 
 
     const token = authHeader.substring(7);
 
-    // Kiểm tra format JWT cơ bản trước khi verify
     if (!token || token.split('.').length !== 3) {
       throw new UnauthorizedError('Invalid token format');
     }
@@ -23,18 +22,15 @@ export const authenticate = (req: Request, _res: Response, next: NextFunction): 
     req.user = decoded;
     next();
   } catch (error) {
-    // Handle tất cả các loại lỗi JWT
     if (error instanceof jwt.JsonWebTokenError) {
       next(new UnauthorizedError('Invalid token'));
     } else if (error instanceof jwt.TokenExpiredError) {
       next(new UnauthorizedError('Token expired'));
     } else if (error instanceof SyntaxError && error.message.includes('JSON')) {
-      // Handle malformed token causing JSON parse error
       next(new UnauthorizedError('Malformed token'));
     } else if (error instanceof UnauthorizedError) {
       next(error);
     } else {
-      // Log unexpected errors for debugging
       console.error('Unexpected auth error:', error);
       next(new UnauthorizedError('Authentication failed'));
     }

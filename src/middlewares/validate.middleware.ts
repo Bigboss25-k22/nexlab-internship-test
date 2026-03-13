@@ -21,7 +21,6 @@ export const validate = (schema: Schema) => {
     }
 
     console.log('Validation passed, validated value:', value);
-    // Update req.body with validated data
     req.body = value;
     next();
   };

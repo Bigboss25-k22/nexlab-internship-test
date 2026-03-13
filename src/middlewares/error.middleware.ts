@@ -16,7 +16,6 @@ export const errorHandler = (
     return;
   }
 
-  // Unhandled errors
   console.error('Unhandled Error:', err);
   res.status(500).json({
     success: false,
