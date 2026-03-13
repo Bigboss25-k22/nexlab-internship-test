@@ -13,8 +13,8 @@ import { RefreshToken } from './RefreshToken';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   @Column({ type: 'varchar', length: 100, name: 'full_name' })
   fullName!: string;

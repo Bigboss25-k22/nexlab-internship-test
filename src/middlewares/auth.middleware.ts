@@ -1,16 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { UnauthorizedError, ForbiddenError } from '../utils/errors';
-import { JwtPayload } from '../types/auth.types';
-
-// Extend Express Request type
-declare global {
-  namespace Express {
-    interface Request {
-      user?: JwtPayload;
-    }
-  }
-}
+import { JwtPayload } from '../types/auth';
 
 export const authenticate = (req: Request, _res: Response, next: NextFunction): void => {
   try {
@@ -20,7 +11,7 @@ export const authenticate = (req: Request, _res: Response, next: NextFunction): 
       throw new UnauthorizedError('No token provided');
     }
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    const token = authHeader.substring(7);
 
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
 

@@ -13,14 +13,17 @@ export class RefreshToken {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'int', name: 'user_id' })
-  userId!: number;
+  @Column({ type: 'uuid', name: 'user_id' })
+  userId!: string;
 
   @Column({ type: 'varchar', length: 500 })
   token!: string;
 
   @Column({ type: 'timestamp', name: 'expires_at' })
   expiresAt!: Date;
+
+  @Column({ type: 'boolean', default: false, name: 'is_revoked' })
+  isRevoked!: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

@@ -8,8 +8,8 @@ export class Freelancer {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'int', name: 'user_id' })
-  userId!: number;
+  @Column({ type: 'uuid', name: 'user_id' })
+  userId!: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true, name: 'house_number' })
   houseNumber!: string | null;

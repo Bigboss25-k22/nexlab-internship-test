@@ -3,9 +3,11 @@ import { Schema } from 'joi';
 
 export const validate = (schema: Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const { error } = schema.validate(req.body, { abortEarly: false });
+    console.log('Validating request body:', req.body);
+    const { error, value } = schema.validate(req.body, { abortEarly: false });
 
     if (error) {
+      console.log('Validation error:', error.details);
       const errors = error.details.map((detail) => ({
         field: detail.path.join('.'),
         message: detail.message,
@@ -18,6 +20,9 @@ export const validate = (schema: Schema) => {
       });
     }
 
+    console.log('Validation passed, validated value:', value);
+    // Update req.body with validated data
+    req.body = value;
     next();
   };
 };

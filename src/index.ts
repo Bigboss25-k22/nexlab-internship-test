@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { AppDataSource } from './config/data-source';
 import routes from './routes';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
@@ -19,9 +20,12 @@ app.use(
   })
 );
 
+// Cookie parser
+app.use(cookieParser());
+
 // Body parser
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Routes
 app.use('/api', routes);

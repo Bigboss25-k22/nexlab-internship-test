@@ -7,10 +7,16 @@ export class StoreOwner {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'int', name: 'user_id' })
-  userId!: number;
+  @Column({ type: 'uuid', name: 'user_id' })
+  userId!: string;
 
-  @Column({ type: 'varchar', length: 50, unique: true, name: 'owner_code' })
+  @Column({
+    type: 'varchar',
+    length: 50,
+    unique: true,
+    name: 'owner_code',
+    default: () => `'OWN_' || SUBSTR(MD5(RANDOM()::TEXT), 1, 12)`,
+  })
   ownerCode!: string;
 
   // Relations

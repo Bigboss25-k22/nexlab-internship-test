@@ -1,13 +1,19 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../utils/async-handler';
-import { ApiResponse } from '../types/response.types';
+import { SuccessResponse } from '../types/response.types';
+import { UserService, UserProfileResponse } from '../services/user.service';
+
+const userService = new UserService();
 
 export const getProfile = asyncHandler(
-  async (req: Request, res: Response<ApiResponse>): Promise<void> => {
+  async (req: Request, res: Response<SuccessResponse<UserProfileResponse>>): Promise<void> => {
+    const userId = req.user!.userId;
+    const profile = await userService.getUserProfile(userId);
+
     res.status(200).json({
       success: true,
       message: 'Profile retrieved successfully',
-      data: req.user,
+      data: profile,
     });
   }
 );
