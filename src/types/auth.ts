@@ -26,6 +26,36 @@ export interface RefreshTokenDto {
   refreshToken: string;
 }
 
+// Email Verification DTOs
+export interface SendVerificationEmailDto {
+  email: string;
+}
+
+export interface VerifyEmailDto {
+  email: string;
+  verificationCode: string;
+}
+
+export interface ResendVerificationDto {
+  email: string;
+}
+
+// Password Reset DTOs
+export interface ForgotPasswordDto {
+  email: string;
+}
+
+export interface ResetPasswordDto {
+  resetToken: string;
+  resetCode: string;
+  newPassword: string;
+}
+
+export interface VerifyResetCodeDto {
+  resetToken: string;
+  resetCode: string;
+}
+
 // Responses
 export interface RegisterResponse {
   fullName: string;
@@ -38,6 +68,11 @@ export interface RegisterResponse {
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
+}
+
+// Secure login response (không trả refresh token trong JSON)
+export interface SecureLoginResponse {
+  accessToken: string;
 }
 
 export type AuthResponse = LoginResponse;

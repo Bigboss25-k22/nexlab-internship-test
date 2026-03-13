@@ -5,7 +5,7 @@ import {
   LoginDto,
   RefreshTokenDto,
   RegisterResponse,
-  LoginResponse,
+  SecureLoginResponse,
   RefreshTokenResponse,
   LogoutResponse,
 } from '../types/auth';
@@ -34,12 +34,11 @@ export const register = asyncHandler(
 export const login = asyncHandler(
   async (
     req: Request<object, object, LoginDto>,
-    res: Response<SuccessResponse<LoginResponse>>
+    res: Response<SuccessResponse<SecureLoginResponse>>
   ): Promise<void> => {
     const { emailOrPhone, password } = req.body;
     const result = await authService.login(emailOrPhone, password);
 
-    // Set HttpOnly cookie for refresh token
     res.cookie('refreshToken', result.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -52,7 +51,6 @@ export const login = asyncHandler(
       message: 'Login successful',
       data: {
         accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
       },
     });
   }
@@ -63,7 +61,12 @@ export const refreshToken = asyncHandler(
     req: Request<object, object, RefreshTokenDto>,
     res: Response<SuccessResponse<RefreshTokenResponse>>
   ): Promise<void> => {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+    
+    if (!refreshToken) {
+      throw new UnauthorizedError('Refresh token required');
+    }
+    
     const result = await authService.refreshAccessToken(refreshToken);
 
     res.status(200).json({
@@ -81,8 +84,14 @@ export const logout = asyncHandler(
       throw new UnauthorizedError('Access token required');
     }
 
-    const accessToken = authHeader.substring(7); // Remove 'Bearer ' prefix
+    const accessToken = authHeader.substring(7);
     const result = await authService.logout(accessToken);
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
 
     res.status(200).json({
       success: true,
